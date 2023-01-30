@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>App</title>
+  </head>
+  <body>
+    <p>
+      imei
+      <span id='imei'>0</span>
+    </p>
+    <p>
+      lat
+      <span id='lat'>0</span>
+    </p>
+    <p>
+      lng
+      <span id='lng'>0</span>
+    </p>
+    <script type='module'>
+      import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js"; var
+      roomName = "{{roomName}}"; const socket = io(location.origin);
+      console.log(roomName) ;socket.on("connect", () => {
+      socket.emit("join-room", { roomName: roomName , socketId: socket.id});
+      socket.on("full-limit", (data)=> {console.log(data) });
+      socket.on("ferry-inactive", (data)=> {console.log(data) });
+      socket.on("location-with-imei" , (data) => { console.log(data);
+      document.getElementById('imei').innerText = data.location.imei;
+      document.getElementById('lat').innerText = data.location.lat;
+      document.getElementById('lng').innerText = data.location.lng; }); });
+      socket.on("disconnect", () => { console.log(socket.id); });
+    </script>
+    {{imeiNumber}}
+  </body>
+</html>

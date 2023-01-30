@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>App</title>
+  </head>
+  <body>
+    <h1>
+      Total numbers of client:
+      <span id='total'>0</span>
+    </h1>
+    <script type='module'>
+      import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+      const socket = io(location.origin); socket.emit('get-client-count');
+      socket.on('client-count', (msg) => {
+      document.getElementById('total').innerText = msg.count; })
+    </script>
+    {{message}}
+  </body>
+</html>
