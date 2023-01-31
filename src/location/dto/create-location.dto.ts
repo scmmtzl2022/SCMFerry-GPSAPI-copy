@@ -1,8 +1,9 @@
 import { IsNotEmpty } from 'class-validator';
+import { locationDataDto } from './location-data.dto';
 
 export class CreateLocationDto {
   @IsNotEmpty()
-  data: Object;
+  data: locationDataDto;
   @IsNotEmpty()
   imeiNumber: string;
   @IsNotEmpty()

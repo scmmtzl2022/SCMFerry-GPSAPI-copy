@@ -25,7 +25,8 @@ export class LocationController {
     return this.locationService.create(createLocationDto);
   }
   @Post('/get-location')
-  findLatestLocation(@Body() ferryNumber: string) {
+  findLatestLocation(@Body() ferryNumber: any) {
+    console.log("Ferry Number ",ferryNumber)
     return this.locationService.findLatest(ferryNumber);
   }
   @Post('/check-ferry-no')

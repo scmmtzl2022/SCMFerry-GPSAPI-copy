@@ -23,12 +23,14 @@ export class LocationService {
     return await this.locationRepository.find();
   }
   async create(createLocationDto: CreateLocationDto): Promise<any> {
+    // console.log('dto-=....',createLocationDto)
     return await this.locationRepository.save(createLocationDto);
   }
   async updateRoute(
     updateLocationDto: UpdateLocationDto,
     id: any,
   ): Promise<any> {
+    console.log('.....', updateLocationDto)
     return await this.locationRepository.update(id, updateLocationDto);
   }
 
@@ -43,14 +45,16 @@ export class LocationService {
   }
 
   async findLatest(ferryNumber: any) {
-    let ferryDataList = await this.locationRepository.find(ferryNumber);
-    console.log(moment().format('YYYY-MM-dd'));
-    let ferryData = ferryDataList.filter(
-      (location) =>
-        moment(location.dateTime).format('YYYY-MM-dd') ===
-        moment().format('YYYY-MM-dd'),
-    );
-    return ferryData.length ? ferryData[0] : {};
+    console.log("findLatest function :", ferryNumber);
+     return this.locationRepository.findOneBy(ferryNumber);
+    // console.log("ferryDataList :", ferryDataList);
+    // console.log(moment().format('YYYY-MM-dd'));
+    // let ferryData = ferryDataList.filter(
+    //   (location) =>
+    //     moment(location.dateTime).format('YYYY-MM-dd') ===
+    //     moment().format('YYYY-MM-dd'),
+    // );
+    // return ferryData.length ? ferryData[0] : {};
   }
   async checkFerryNumber(payload: any): Promise<any> {
     return await this.locationRepository.find(payload);

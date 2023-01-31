@@ -10,16 +10,17 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   inject: [ConfigService],
   useFactory: async (): Promise<TypeOrmModuleOptions> => {
     return {
-      type: 'mongodb',
-      url: process.env.MONGODB_URL,
-      useNewUrlParser: true,
-      database: 'gps',
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USERNAME,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
       entities: [Location],
-      ssl: true,
-      autoLoadEntities: true,
-      logging: true,
       synchronize: true,
-      useUnifiedTopology: true,
+      logging: true,
+      autoLoadEntities: true,
     };
   },
 };
+

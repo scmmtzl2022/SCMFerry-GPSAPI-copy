@@ -7,13 +7,16 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
 } from 'typeorm';
-
+import { locationDataDto } from '../dto/location-data.dto';
 @Entity('locations')
 export class Location extends BaseEntity {
-  @ObjectIdColumn()
-  id: ObjectID;
-  @Column()
-  data: Object;
+  @PrimaryGeneratedColumn({
+    type: 'bigint',
+    comment: 'The route unique identifier',
+  })
+  id: number;
+  @Column({ type: 'json'})
+  data: locationDataDto;
   @Column()
   imeiNumber: string;
   @Column()

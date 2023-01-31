@@ -63,6 +63,7 @@ export class AppGateway
         moment().format('YYYY-MM-dd'),
     );
     if (todayRoute.length === 0) {
+      console.log(" payload ===========>", payload)
       await this.locationService.create({
         data: payload.location,
         dateTime: payload.dateTime,

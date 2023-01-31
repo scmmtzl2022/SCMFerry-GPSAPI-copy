@@ -1,10 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsNotEmpty } from 'class-validator';
 import { CreateLocationDto } from './create-location.dto';
+import { locationDataDto } from './location-data.dto';
 
 export class UpdateLocationDto extends PartialType(CreateLocationDto) {
   @IsNotEmpty()
-  data: Object;
+  data: locationDataDto;
   @IsNotEmpty()
   dateTime: string;
 }
