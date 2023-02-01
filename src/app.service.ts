@@ -24,8 +24,8 @@ export class AppService {
     private socket: AppGateway,
   ) {}
   private readonly logger = new Logger(AppService.name);
-  // @Cron('*/30 * 6,7 * * 1-5', {
-    @Cron('*/30 * * * * 1-5', {
+  @Cron('*/30 * 6,7 * * 1-5', {
+    // @Cron('*/30 * * * * 1-5', {
     timeZone: 'Asia/Yangon',
   })
   async handleCron() {
@@ -35,7 +35,6 @@ export class AppService {
     );
     let checkValidRoute = await this.checkValidRoute();
     if (checkValidRoute) {
-      console.log("checkValidRoute :", checkValidRoute);
       await this.getCurrentLocation();
     }
   }
@@ -99,8 +98,8 @@ export class AppService {
       stringify({
         ...commonParam,
         ...getLocationParam,
-        // access_token: global.accessToken,
-        access_token: '82296ed2b8bcc488182e2256e1ad4431',
+        access_token: global.accessToken,
+        // access_token: '82296ed2b8bcc488182e2256e1ad4431',
       }),
     );
     try {
@@ -108,7 +107,6 @@ export class AppService {
         .post(apiURL, qs.toString(), headers)
         .toPromise()
         .then(async (response) => {
-          console.log("response.data.result ", response.data.result)
           let payload = {
             imeiList: response.data.result,
             dateTime: currentTimeinTZ.toString(),
