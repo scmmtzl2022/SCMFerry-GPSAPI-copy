@@ -13,6 +13,7 @@ import {
 import * as moment from 'moment-timezone';
 import { Socket, Server } from 'socket.io';
 import { LocationService } from './location/location.service';
+import { RouteService } from './location/route.service';
 import * as ferry_data from './res/json/ferry_data.json';
 
 @WebSocketGateway({
@@ -23,7 +24,7 @@ import * as ferry_data from './res/json/ferry_data.json';
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private locationService: LocationService) {
+  constructor(private locationService: LocationService, private routeService: RouteService) {
     moment.tz.setDefault('Asia/Yangon');
   }
   @WebSocketServer() server: Server;
@@ -33,6 +34,57 @@ export class AppGateway
   connectRoom(client: Socket, payload: any) {
     this.logger.log(`Connected User : ${payload}`);
     client.join(payload.socket_id);
+  }
+
+  @SubscribeMessage('driver-connect')
+  async createRoom(client: Socket, payload: any) {
+    // await this.routeService.createNewRoute(payload);
+    // this.server.emit(`driver-route-id ${payload.ferry_no}`, 1);
+    const routePayload = {
+      ferry_no: payload.ferry_no,
+      is_active: true,
+      time_period: payload.time_period,
+    };
+    const data = await this.routeService.checkFerryNumber(routePayload);
+    let todayRoute = data.filter(
+      (dist) =>
+        moment(dist.datetime).format('YYYY-MM-dd') ===
+        moment().format('YYYY-MM-dd'),
+    );
+    if (todayRoute.length === 0) {
+      todayRoute = await this.routeService.createNewRoute(payload);
+    }
+    this.server.emit(`driver-route-id ${payload.ferry_no}`, todayRoute.id);
+    this.server.emit(`ferry-location-to-user ${payload.ferry_no}`, {
+      latitude: payload.latitude,
+      longitude: payload.longitude,
+    });
+  }
+
+  @SubscribeMessage('location-to-server')
+  async handleLocation(client: Socket, payload: any): Promise<void> {
+    const param = {
+      latitude: payload.latitude,
+      longitude: payload.longitude,
+    };
+    this.logger.log(`location-to-user : ${param}`);
+    this.server.emit(`ferry-location-to-user ${payload.ferry_no}`, param);
+    await this.routeService.updateRoute(param, payload.route_id);
+  }
+
+  @SubscribeMessage('driver-stop-location')
+  async endRoom(client: Socket, payload: any) {
+    this.logger.log(`Disconnect socket id ${payload}`);
+    client.leave(payload.socket_id);
+    // this.server.to(payload.socket_id).disconnectSockets();
+    const param = {
+      is_active: false,
+      datetime: payload.datetime,
+    };
+    await this.routeService.driverStopLocation(param, payload.socket_id);
+    this.server.emit(`disconnect-driver ${payload.socket_id}`, {
+      msg: 'disconnect-driver',
+    });
   }
 
   @SubscribeMessage('location-with-imei')
@@ -46,16 +98,17 @@ export class AppGateway
   ) {
     this.logger.log(`Updated location ${payload.location}`);
     const ferry = ferry_data.find((ferry) => {
-      return ferry.imei_no === payload.imeiNumber;
+      return ferry?.imei_no === payload.imeiNumber;
     });
-    this.server.to(ferry.ferry_no).emit(`location-with-imei`, {
+    console.log("ferry", ferry)
+    this.server.to(ferry?.ferry_no).emit(`location-with-imei`, {
       location: payload.location,
-      ferryNumber: ferry.ferry_no,
+      ferryNumber: ferry?.ferry_no,
       dateTime: payload.dateTime,
     });
 
     let routeData = await this.locationService.checkFerryNumber({
-      ferryNumber: ferry.ferry_no,
+      ferryNumber: ferry?.ferry_no,
     });
     let todayRoute = routeData.filter(
       (location) =>
@@ -63,11 +116,10 @@ export class AppGateway
         moment().format('YYYY-MM-dd'),
     );
     if (todayRoute.length === 0) {
-      console.log(" payload ===========>", payload)
       await this.locationService.create({
         data: payload.location,
         dateTime: payload.dateTime,
-        ferryNumber: ferry.ferry_no,
+        ferryNumber: ferry?.ferry_no,
         imeiNumber: payload.imeiNumber,
         isActive: true,
         isFullLimit: false,

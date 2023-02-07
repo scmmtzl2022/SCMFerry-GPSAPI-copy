@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { locationDataDto } from '../dto/location-data.dto';
+
 @Entity('locations')
 export class Location extends BaseEntity {
   @PrimaryGeneratedColumn({
@@ -27,4 +28,43 @@ export class Location extends BaseEntity {
   isActive: boolean;
   @Column({ type: 'boolean', default: 0 })
   isFullLimit: boolean;
+}
+
+@Entity('routes')
+export class Route extends BaseEntity{
+  @PrimaryGeneratedColumn({
+    comment: 'The route unique identifier',
+  })
+  id: number;
+
+  @Column({
+    type: 'varchar',
+  })
+  ferry_no: string;
+
+  @Column({
+    type: 'varchar',
+  })
+  latitude: string;
+
+  @Column({
+    type: 'varchar',
+  })
+  longitude: string;
+
+  @Column({
+    type: 'text',
+  })
+  time_period: string;
+
+  @Column({
+    type: 'text',
+  })
+  datetime: string;
+
+  @Column({
+    type: 'boolean',
+    default: 1,
+  })
+  is_active: boolean;
 }

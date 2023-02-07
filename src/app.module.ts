@@ -9,6 +9,7 @@ import { AppGateway } from './app.gateway';
 import { AppService } from './app.service';
 import { typeOrmAsyncConfig } from './config/typeorm.config';
 import { LocationModule } from './location/location.module';
+import { RouteModule } from './location/route.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LocationModule } from './location/location.module';
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     HttpModule,
     LocationModule,
+    RouteModule,
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],

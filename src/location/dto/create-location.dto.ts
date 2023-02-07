@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty , Length} from 'class-validator';
 import { locationDataDto } from './location-data.dto';
 
 export class CreateLocationDto {

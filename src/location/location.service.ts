@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateLocationDto } from './dto/create-location.dto';
+import { CreateLocationDto  } from './dto/create-location.dto';
+import { CreateRouteDto } from './dto/create-route.dto';
 import {
   UpdateActiveDto,
   UpdateLimitDto,
@@ -9,6 +10,7 @@ import {
 } from './dto/update.dto';
 import { Location } from './entities/location.entity';
 import * as moment from 'moment-timezone';
+import { Route } from './entities/location.entity';
 
 @Injectable()
 export class LocationService {

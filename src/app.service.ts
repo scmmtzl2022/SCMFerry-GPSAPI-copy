@@ -24,8 +24,8 @@ export class AppService {
     private socket: AppGateway,
   ) {}
   private readonly logger = new Logger(AppService.name);
-  @Cron('*/30 * 6,7 * * 1-5', {
-    // @Cron('*/30 * * * * 1-5', {
+   @Cron('*/30 * 6,7 * * 1-5', {
+    //  @Cron('*/10 * * * * 1-5', {
     timeZone: 'Asia/Yangon',
   })
   async handleCron() {
@@ -49,7 +49,7 @@ export class AppService {
 
   //for Full Limit Testing
 
-  // @Cron('0 25 11 * * 1-5', {
+  // @Cron('0 46 * * * 1-5', {
   //   timeZone: 'Asia/Yangon',
   // })
   // async limitHandler() {
@@ -99,7 +99,7 @@ export class AppService {
         ...commonParam,
         ...getLocationParam,
         access_token: global.accessToken,
-        // access_token: '82296ed2b8bcc488182e2256e1ad4431',
+        // access_token: '464a54847b5e2eea3c4d6fc5d6cc6509',
       }),
     );
     try {
