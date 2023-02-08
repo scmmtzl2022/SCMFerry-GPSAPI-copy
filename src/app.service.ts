@@ -49,7 +49,7 @@ export class AppService {
 
   //for Full Limit Testing
 
-  // @Cron('0 46 * * * 1-5', {
+  // @Cron('0 56 10 * * 1-5', {
   //   timeZone: 'Asia/Yangon',
   // })
   // async limitHandler() {
@@ -98,8 +98,8 @@ export class AppService {
       stringify({
         ...commonParam,
         ...getLocationParam,
-        access_token: global.accessToken,
-        // access_token: '464a54847b5e2eea3c4d6fc5d6cc6509',
+        // access_token: global.accessToken,
+        access_token: '03b78307d0ae4a63d0ee91913fbdae77',
       }),
     );
     try {

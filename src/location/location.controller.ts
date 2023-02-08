@@ -26,8 +26,8 @@ export class LocationController {
   }
   @Post('/get-location')
   findLatestLocation(@Body() ferryNumber: any) {
-    console.log("Ferry Number ",ferryNumber)
-    return this.locationService.findLatest(ferryNumber);
+    console.log("Ferry Number ",ferryNumber.ferryNumber)
+    return this.locationService.findLatest(ferryNumber.ferryNumber);
   }
   @Post('/check-ferry-no')
   @UsePipes(ValidationPipe)

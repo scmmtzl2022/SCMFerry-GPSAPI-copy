@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Any, Repository } from 'typeorm';
 import { CreateLocationDto  } from './dto/create-location.dto';
 import { CreateRouteDto } from './dto/create-route.dto';
 import {
@@ -44,16 +44,16 @@ export class LocationService {
     return await this.locationRepository.update(id, updateActiveDto);
   }
 
-  async findLatest(ferryNumber: any) {
-     return this.locationRepository.findOneBy(ferryNumber);
-    // console.log("ferryDataList :", ferryDataList);
-    // console.log(moment().format('YYYY-MM-dd'));
-    // let ferryData = ferryDataList.filter(
-    //   (location) =>
-    //     moment(location.dateTime).format('YYYY-MM-dd') ===
-    //     moment().format('YYYY-MM-dd'),
-    // );
-    // return ferryData.length ? ferryData[0] : {};
+  async findLatest(ferryNumber: string) {
+    let ferryDataList = await this.locationRepository.findOne({
+      where : {
+        ferryNumber: ferryNumber
+      },
+      order: {
+            id: "DESC" 
+    }
+    });
+    return ferryDataList;
   }
   async checkFerryNumber(payload: any): Promise<any> {
     return await this.locationRepository.find({
