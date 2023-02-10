@@ -98,8 +98,8 @@ export class AppService {
       stringify({
         ...commonParam,
         ...getLocationParam,
-        // access_token: global.accessToken,
-        access_token: '03b78307d0ae4a63d0ee91913fbdae77',
+        access_token: global.accessToken,
+        // access_token: '03b78307d0ae4a63d0ee91913fbdae77',
       }),
     );
     try {
